@@ -26,12 +26,3 @@ func main() {
 		fmt.Printf("Key %d: %s\n", shift, decryptedText)
 	}
 }
-
-func findIndex(arr []rune, char rune) int {
-	for i, val := range arr {
-		if val == char {
-			return i
-		}
-	}
-	return -1
-}
