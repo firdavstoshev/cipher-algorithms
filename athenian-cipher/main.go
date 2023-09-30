@@ -9,9 +9,10 @@ func main() {
 	word := "secretmessage"
 	encrypted := ""
 	for _, char := range word {
-		fmt.Print((a*findIndex(alphabet, char)+b)%len(alphabet), "\t")
-		f := alphabet[(a*findIndex(alphabet, char)+b)%len(alphabet)]
-		encrypted += string(f) + "\t"
+		newIndex := (a*findIndex(alphabet, char) + b) % len(alphabet)
+		fmt.Print(newIndex, "\t")
+		newChar := alphabet[newIndex]
+		encrypted += string(newChar) + "\t"
 	}
 	fmt.Println("\n", encrypted)
 }
