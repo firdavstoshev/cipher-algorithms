@@ -5,41 +5,26 @@ import (
 )
 
 func main() {
-	fmt.Println(cipher("фирдавс", 3))
-	fmt.Println(decipher("члужгеф", 3))
-}
+	var arr = []rune{'А', 'Б', 'В', 'Г', 'G', 'Д', 'Е', '~', 'Ж', 'З', 'И', 'm', 'Й', 'К', 'Q', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'U', 'Ф', 'Х', 'H', 'Ч', 'J', 'Ш', 'Ъ', 'Э', 'Ю', 'Я'}
+	cipheredText := "ОЛИП HХ ЗШЪ"
 
-func cipher(text string, shift int) string {
-	var alphabet = []rune{'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'}
-	var res string
-	for _, char := range text {
-		index := findIndex(alphabet, char)
-		if index == -1 {
-			continue
-		} else {
-			newIndex := (index + shift) % len(alphabet)
-			res += string(alphabet[newIndex])
-		}
-	}
-	return res
-}
-
-func decipher(text string, shift int) string {
-	var alphabet = []rune{'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'}
-	var res string
-	for _, char := range text {
-		index := findIndex(alphabet, char)
-		if index == -1 {
-			continue
-		} else {
-			newIndex := (index - shift + len(alphabet)) % len(alphabet)
-			if newIndex < 0 {
-				newIndex += len(alphabet)
+	for shift := 1; shift < len(arr); shift++ {
+		var decryptedText string
+		for _, char := range cipheredText {
+			if char == '.' {
+				decryptedText += " "
+			} else {
+				index := findIndex(arr, char)
+				if index != -1 {
+					shiftedIndex := (index - shift + len(arr)) % len(arr)
+					decryptedText += string(arr[shiftedIndex])
+				} else {
+					decryptedText += string(char)
+				}
 			}
-			res += string(alphabet[newIndex])
 		}
+		fmt.Printf("Key %d: %s\n", shift, decryptedText)
 	}
-	return res
 }
 
 func findKeyByCipher(cipheredWord string) { // TODO
