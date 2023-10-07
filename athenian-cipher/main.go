@@ -1,40 +1,65 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var alphabet = []rune{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
 
-func main() {
-	//fmt.Println(encrypt("secretmessage", 5, 7))
-	fmt.Println(decrypt("tbrobypbtthlb", 5, 7))
-}
-
-func encrypt(word string, a, b int) string {
-	encrypted := ""
-	for _, char := range word {
-		newIndex := (a*findIndex(alphabet, char) + b) % len(alphabet)
-		newChar := alphabet[newIndex]
-		encrypted += string(newChar)
+func modInverse(a, m int) int {
+	for i := 1; i < m; i++ {
+		if (a*i)%m == 1 {
+			return i
+		}
 	}
-	return encrypted
+	return 1
 }
 
-func findIndex(arr []rune, char rune) int {
-	for i, val := range arr {
-		if val == char {
+func encrypt(plainText string, a, b int) string {
+	encryptedText := ""
+	m := len(alphabet)
+	for _, char := range plainText {
+		if char == ' ' {
+			encryptedText += " "
+			continue
+		}
+		x := getIndex(char)
+		encryptedChar := (a*x + b) % m
+		encryptedText += string(alphabet[encryptedChar])
+	}
+	return encryptedText
+}
+
+func decrypt(cipherText string, a, b int) string {
+	decryptedText := ""
+	m := len(alphabet)
+	aInverse := modInverse(a, m)
+	for _, char := range cipherText {
+		if char == ' ' {
+			decryptedText += " "
+			continue
+		}
+		x := getIndex(char)
+		decryptedChar := (aInverse * (x - b + m)) % m
+		decryptedText += string(alphabet[decryptedChar])
+	}
+	return decryptedText
+}
+
+func getIndex(char rune) int {
+	for i, c := range alphabet {
+		if c == char {
 			return i
 		}
 	}
 	return -1
 }
 
-func decrypt(word string, a, b int) string {
-	decrypted := ""
-	m := len(alphabet)
-	for _, char := range word {
-		newIndex := ((findIndex(alphabet, char) + m - b) / a) % m
-		fmt.Print(newIndex, "\t")
-		decrypted += string(alphabet[newIndex])
-	}
-	return decrypted
+func main() {
+	plainText := "secretmessage"
+	a, b := 5, 7
+	encryptedText := encrypt(plainText, a, b)
+	fmt.Println("Encrypted:", encryptedText)
+	decryptedText := decrypt(encryptedText, a, b)
+	fmt.Println("Decrypted:", decryptedText)
 }
